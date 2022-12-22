@@ -14,6 +14,7 @@ namespace BlazingPizza
         public static void Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
+           
         
             // Initialize the database
             var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();
@@ -24,7 +25,10 @@ namespace BlazingPizza
                 {
                     SeedData.Initialize(db);
                 }
+
             }
+
+            
         
             host.Run();
         

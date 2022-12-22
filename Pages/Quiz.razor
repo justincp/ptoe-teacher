@@ -1,0 +1,118 @@
+@page "/quiz"
+@layout MainLayout
+@inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
+@inject OrderState OrderState
+
+<div class="main">
+  <ul class="pizza-cards">
+    @if (specials != null)
+    {
+      @foreach (var special in specials)
+      {
+          <li @onclick="@(() => OrderState.ShowQuizDialog())" style="background-image: url('@special.ImageUrl')">
+          <!--li @onclick="@(() => OrderState.ShowConfigurePizzaDialog(special))" style="background-image: url('@special.ImageUrl')"-->
+          <div class="pizza-info">
+          <span class="title">@special.Name</span>
+          @special.Description
+          <span class="price">@special.GetFormattedBasePrice()</span>
+          </div>
+        </li>
+      }
+    }
+  </ul>
+</div>
+
+@if (OrderState.ShowingConfigureDialog)
+{
+    <!--QuizDialog Question="game.Question"
+            OnCancel="OrderState.CancelConfigurePizzaDialog"
+            OnConfirm="OrderState.ConfirmConfigurePizzaDialog" /-->
+
+
+    <QuizDialog
+      Question="OrderState.Question"
+      OnCancel="OrderState.CancelConfigurePizzaDialog"
+      OnConfirm="OrderState.ConfirmConfigurePizzaDialog"
+      OnKeyDown="OrderState.OnKeyDown"
+      Game="OrderState.game"
+      GameOver="OrderState.GameOver"
+      />
+
+}
+
+@if (OrderState.ShowingResponseDialog)
+{
+    <!--QuizDialog Question="game.Question"
+            OnCancel="OrderState.CancelConfigurePizzaDialog"
+            OnConfirm="OrderState.ConfirmConfigurePizzaDialog" /-->
+
+
+    <ResponseDialog
+      Question="OrderState.Question"
+      OnCancel="OrderState.CancelConfigurePizzaDialog"
+      OnConfirm="OrderState.ConfirmConfigurePizzaDialog"
+      OnKeyDown="OrderState.OnKeyDown"
+      Game="OrderState.game"
+      />
+
+}
+
+<div class="sidebar">
+    @if (order.Pizzas.Any())
+    {
+        <div class="order-contents">
+            <h2>Your order</h2>
+
+            
+        </div>
+    }
+    else
+    {
+        <div class="empty-cart">Choose a pizza<br>to get started</div>
+    }
+
+
+</div>
+
+@code {
+    List<PizzaSpecial> specials = new List<PizzaSpecial>();
+    Order order => OrderState.Order;
+
+    protected override async Task OnInitializedAsync()
+    {
+        specials = await HttpClient.GetFromJsonAsync<List<PizzaSpecial>>(NavigationManager.BaseUri + "specials");
+
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender) //TODO: don't think this needs to be its own function
+    {
+        if (firstRender)
+        {
+            OrderState.game = new GameManager();
+            OrderState.game.NextQuestion();
+            OrderState.Question = OrderState.game.Question;
+        }
+
+        if (OrderState.gameFinished)
+        { await StoreGame();
+            OrderState.gameFinished = false;
+        }
+
+
+
+    }
+
+        async Task StoreGame()
+        {
+            GameResult result = new GameResult();
+            result.Name = "Justin";
+            result.Mastered = OrderState.game.TotalMastered();
+            result.GameMode = OrderState.game.POSITIVE_MODE;
+            var response = await HttpClient.PostAsJsonAsync(NavigationManager.BaseUri + "game", result);
+            var newOrderId = await response.Content.ReadFromJsonAsync<int>();
+        }
+
+
+}
+		

@@ -1,0 +1,223 @@
+@using System.Threading;
+@inject HttpClient HttpClient
+@implements IDisposable
+
+<div class="dialog-container">
+    <div class="dialog">
+        <div class="dialog-title">
+            <h1>What is the element name of @Game.Question.Symbol?</h1>
+            Seconds remaining: @counter
+        </div>
+        <form class="dialog-body">
+            <div>
+                <label>Element name:</label>
+                <!--input @bind-value="response" @bind-value:event="oninput" @onkeypress="Enter" @onkeypress:preventDefault="isPreventKey" @onkeypress:stopPropagation/-->
+                <!--input @bind="@response" @onkeydown="Enter" @onkeypress:preventDefault @onkeypress:stopPropagation @onchangevalue="ChangeValue" /-->
+                <!--input @bind-value="@response" @onkeydown="Enter" @onkeypress:preventDefault @onkeypress:stopPropagation /-->
+                <!--InputText @bind-value="response" @onkeydown="@Enter" /-->
+                <!--input type="text" @bind="Question.Response" @bind:event="oninput" @onkeydown="@Enter" /-->
+                <!--input type="text" @bind="Question.Response"  @onkeydown="@Enter" /-->
+                <EditForm Model="response">
+                    <!--InputText @bind-Value="response" @onkeydown="Enter" @bind-Value:event="oninput"/-->
+                    <InputText @bind-Value="response" />
+                    @if (freezeInputs && pictureFile != "") {
+                        <img src="@pictureFile" width="50" height="50"/>
+                    }
+                    <!--MyInputText @ref="@tb" @bind-Value="response" @onkeydown="Enter"/-->
+                </EditForm>
+                
+                @if (freezeInputs && !isCorrect) {
+                    <div>
+                        <h3>@Game.Question.Name</h3>
+                    </div>
+                }
+
+            </div>
+            
+        </form>
+
+        <div class="dialog-buttons">
+            <!--button class="btn btn-secondary mr-auto" @onclick="OnCancel">Cancel</!--button-->
+            <h2>
+                <span class="mr-center">
+                    @Game.Reinforcment()
+                </span>
+            </h2>
+            @if (!freezeInputs)
+            {
+                <button class="btn btn-success ml-auto" @onclick="Click">Check answer</button>
+            } else
+            {
+                <audio autoplay><source src=@soundFile /></audio>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    //private string response = "";
+    MyInputText tb;
+
+    private bool freezeInputs = false;
+
+    [Parameter] public GameManager Game { get; set; }
+    [Parameter] public ElementQuestion Question { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public EventCallback OnKeyDown { get; set; }
+    [Parameter] public EventCallback GameOver { get; set; }
+
+    PeriodicTimer responseTimer;
+    PeriodicTimer gameTimer;
+
+    public string response = "";
+    InputText inputText;
+    bool isPreventKey = true;
+    private string soundFile = "";
+    private string pictureFile = "";
+    private bool isCorrect = false;
+    private int counter = 8;
+
+    //public void ChangeValue( ChangeEventArgs e)
+    //{
+    //    Question.Response = response;
+    //}
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            gameTimer = new(TimeSpan.FromSeconds(1));
+            RunGameTimer();
+        }
+    }
+
+    public async Task Click (MouseEventArgs e)
+    {
+        CheckAnswer();
+
+    }
+
+    public async Task Enter (KeyboardEventArgs e)
+    {
+
+        StateHasChanged();
+        //isPreventKey = false;
+
+        if (e.Code == "Enter" || e.Code == "NumpadEnter")
+        {
+            Question.Response = response;
+
+            //e.Code = "";
+
+
+            CheckAnswer();
+
+
+        }
+    }
+
+    private void CheckAnswer()
+    {
+        freezeInputs = true;
+        isCorrect = Game.CheckAnswer(response);
+
+        if (isCorrect)
+        {
+            if (Game.POSITIVE_MODE)
+            {
+                switch (new Random().Next(2))
+                {
+                    case 0:
+                        soundFile = "/img/mixkit-retro-game-notification-212.wav";
+                        break;
+                    case 1:
+                        soundFile = "/img/mixkit-small-crowd-ovation-437.wav";
+                        break;
+                }
+                pictureFile = "/img/Checkmark.png";
+            }
+            else
+            {
+                soundFile = "";
+                pictureFile = "";
+                // nothing special
+            }
+
+        }
+        else
+        {
+
+            if (Game.POSITIVE_MODE)
+            {
+                // nothing special
+                soundFile = "";
+                pictureFile = "";
+            }
+            else
+            {
+                pictureFile = "/img/OIP.jpg";
+                switch (new Random().Next(2))
+                {
+                    case 0:
+                        soundFile = "/img/mixkit-crowd-laugh-424.wav";
+                        break;
+                    case 1:
+                        soundFile = "/img/mixkit-arcade-retro-game-over-213.wav";
+                        break;
+                }
+
+
+            }
+        }
+
+
+        responseTimer = new(TimeSpan.FromSeconds(3));
+        RunResponseTimer();
+
+    }
+
+
+    async void RunResponseTimer()
+    {
+        while (await responseTimer.WaitForNextTickAsync()) { 
+            Game.NextQuestion();
+            Question = Game.Question;
+            Question.Response = "";
+            response = "";
+            freezeInputs = false;
+            soundFile = "";
+            pictureFile = "";
+            StateHasChanged();
+            break;
+        }
+        responseTimer.Dispose();
+    }
+
+    async void RunGameTimer()
+    {
+        while (await gameTimer.WaitForNextTickAsync())
+        {
+            if (counter > 0 )
+            {
+                counter -= 1;
+                InvokeAsync(StateHasChanged);
+            } else
+            {
+                break;
+            }
+        }
+        gameTimer.Dispose();
+        GameOver.InvokeAsync();
+    }
+
+    public void Dispose()
+    {
+        responseTimer?.Dispose();
+        gameTimer?.Dispose();
+    }
+
+
+
+
+}

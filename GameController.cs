@@ -7,14 +7,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BlazingPizza
 {
-    [Route("orders")]
+    [Route("game")]
     [ApiController]
 
-    public class OrdersController : Controller
+    public class GameController : Controller
     {
         private readonly PizzaStoreContext _db;
 
-        public OrdersController(PizzaStoreContext db)
+        public GameController(PizzaStoreContext db)
         {
             _db = db;
         }
@@ -32,27 +32,32 @@ namespace BlazingPizza
         }
 
         [HttpPost]
-        public async Task<ActionResult<int>> PlaceOrder(Order order)
+        public async Task<ActionResult<int>> StoreResult(GameResult result)
         {
+            result.CreatedTime = DateTime.Now;
+           //result.GameId = new Random().Next(10000);
+            
+            Stupid s = new Stupid();
+            s.OrderId = new Random().Next(10000);
+            //s.UserId = "angry";
+            _db.Stupids.Attach(s);
+            _db.SaveChanges();
+
+            _db.GameResults.Attach(result);
+           // await _db.SaveChangesAsync();
+            _db.SaveChanges();
+
+            /*Order order = new Order();
             order.CreatedTime = DateTime.Now;
-
-            // Enforce existence of Pizza.SpecialId and Topping.ToppingId
-            // in the database - prevent the submitter from making up
-            // new specials and toppings
-            foreach (var pizza in order.Pizzas)
-            {
-                pizza.SpecialId = pizza.Special.Id;
-                pizza.Special = null;
-            }
-
+            order.OrderId = 1;
+            order.UserId = "justin";
+            order.DeliveryAddress = new Address();
             _db.Orders.Attach(order);
             await _db.SaveChangesAsync();
+            */
 
-            return order.OrderId;
+            return result.GameId;
         }
-        
-
-
 
         [HttpGet("{orderId}")]
         public async Task<ActionResult<OrderWithStatus>> GetOrderWithStatus(int orderId)
