@@ -4,7 +4,7 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
-namespace BlazingPizza
+namespace PTOEQuiz
 {
     public class GameManager
     {

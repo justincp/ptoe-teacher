@@ -7,7 +7,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
-namespace BlazingPizza
+namespace PTOEQuiz
 {
     public class Program
     {
@@ -20,7 +20,7 @@ namespace BlazingPizza
             var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();
             using (var scope = scopeFactory.CreateScope())
             {
-                var db = scope.ServiceProvider.GetRequiredService<PizzaStoreContext>();
+                var db = scope.ServiceProvider.GetRequiredService<GameContext>();
                 if (db.Database.EnsureCreated())
                 {
                     SeedData.Initialize(db);

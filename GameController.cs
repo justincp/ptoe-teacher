@@ -5,31 +5,20 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazingPizza
+namespace PTOEQuiz
 {
     [Route("game")]
     [ApiController]
 
     public class GameController : Controller
     {
-        private readonly PizzaStoreContext _db;
+        private readonly GameContext _db;
 
-        public GameController(PizzaStoreContext db)
+        public GameController(GameContext db)
         {
             _db = db;
         }
 
-        [HttpGet]
-        public async Task<ActionResult<List<OrderWithStatus>>> GetOrders()
-        {
-            var orders = await _db.Orders
-                .Include(o => o.Pizzas).ThenInclude(p => p.Special)
-                .Include(o => o.Pizzas).ThenInclude(p => p.Toppings).ThenInclude(t => t.Topping)
-                .OrderByDescending(o => o.CreatedTime)
-                .ToListAsync();
-
-            return orders.Select(o => OrderWithStatus.FromOrder(o)).ToList();
-        }
 
         [HttpPost]
         public async Task<ActionResult<int>> StoreResult(GameResult result)
@@ -53,21 +42,6 @@ namespace BlazingPizza
             return result.GameId;
         }
 
-        [HttpGet("{orderId}")]
-        public async Task<ActionResult<OrderWithStatus>> GetOrderWithStatus(int orderId)
-        {
-            var order = await _db.Orders
-                .Where(o => o.OrderId == orderId)
-                .Include(o => o.Pizzas).ThenInclude(p => p.Special)
-                .Include(o => o.Pizzas).ThenInclude(p => p.Toppings).ThenInclude(t => t.Topping)
-                .SingleOrDefaultAsync();
-        
-            if (order == null)
-            {
-                return NotFound();
-            }
-        
-            return OrderWithStatus.FromOrder(order);
-        }
+       
     }
 }

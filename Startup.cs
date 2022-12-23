@@ -5,7 +5,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 
-namespace BlazingPizza
+namespace PTOEQuiz
 {
   public class Startup
     {
@@ -23,8 +23,8 @@ namespace BlazingPizza
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddHttpClient();
-            services.AddDbContext<PizzaStoreContext>(options => 
-                options.UseSqlite("Data Source=pizza.db"));
+            services.AddDbContext<GameContext>(options => 
+                options.UseSqlite("Data Source=game.db"));
             services.AddScoped<OrderState>();
         }
 

@@ -65,14 +65,13 @@
 
 
 @code {
-    List<PizzaSpecial> specials = new List<PizzaSpecial>();
-    Order order => OrderState.Order;
+
     public string name;
     
 
     protected override async Task OnInitializedAsync()
     {
-        specials = await HttpClient.GetFromJsonAsync<List<PizzaSpecial>>(NavigationManager.BaseUri + "specials");
+
 
     }
 

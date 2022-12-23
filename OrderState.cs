@@ -5,7 +5,7 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace BlazingPizza
+namespace PTOEQuiz
 {
     public class OrderState
     {
@@ -15,27 +15,12 @@ namespace BlazingPizza
 
         public GameManager game { get; set; }
 
-        public Pizza ConfiguringPizza { get; private set; }
-        public Order Order { get; private set; } = new Order();
-
         public ElementQuestion Question;
 
         public string Response;
 
         public bool gameFinished;
 
-        public void ShowConfigurePizzaDialog(PizzaSpecial special)
-        {
-            ConfiguringPizza = new Pizza()
-            {
-                Special = special,
-                SpecialId = special.Id,
-                Size = Pizza.DefaultSize,
-                Toppings = new List<PizzaTopping>(),
-            };
-
-            ShowingConfigureDialog = true;
-        }
 
         public void ShowQuizDialog()
         {
@@ -45,15 +30,14 @@ namespace BlazingPizza
 
         public void CancelConfigurePizzaDialog()
         {
-            ConfiguringPizza = null;
+            
 
             ShowingConfigureDialog = false;
         }
 
         public void ConfirmConfigurePizzaDialog()
         {
-            Order.Pizzas.Add(ConfiguringPizza);
-            ConfiguringPizza = null;
+           
 
             ShowingConfigureDialog = false;
         }
@@ -75,15 +59,6 @@ namespace BlazingPizza
             //ShowingResponseDialog = true;
         }
 
-        public void RemoveConfiguredPizza(Pizza pizza)
-        {
-            Order.Pizzas.Remove(pizza);
-        }
-        
-        public void ResetOrder()
-        {
-            Order = new Order();
-        }
 
         public async void GameOver()
         {
