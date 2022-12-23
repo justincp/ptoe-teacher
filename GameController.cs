@@ -37,13 +37,7 @@ namespace BlazingPizza
             result.CreatedTime = DateTime.Now;
            //result.GameId = new Random().Next(10000);
             
-            Stupid s = new Stupid();
-            s.OrderId = new Random().Next(10000);
-            //s.UserId = "angry";
-            _db.Stupids.Attach(s);
-            _db.SaveChanges();
-
-            _db.GameResults.Attach(result);
+           _db.GameResults.Attach(result);
            // await _db.SaveChangesAsync();
             _db.SaveChanges();
 

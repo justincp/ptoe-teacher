@@ -1,26 +1,31 @@
-@page "/quiz"
+@page "/"
 @layout MainLayout
 @inject HttpClient HttpClient
 @inject NavigationManager NavigationManager
 @inject OrderState OrderState
 
 <div class="main">
-  <ul class="pizza-cards">
-    @if (specials != null)
+<h1>Welcome to the Periodic Table of Elements Teacher</h1>
+<ol>
+    <li> Learn as many words as you can within the time limit.</li>
+    <li> Please only take the quiz one time.</li>
+    <li>Please do not discuss the experience with others.</li>  
+</ol>
+
+    @if (!OrderState.gameFinished)
     {
-      @foreach (var special in specials)
-      {
-          <li @onclick="@(() => OrderState.ShowQuizDialog())" style="background-image: url('@special.ImageUrl')">
-          <!--li @onclick="@(() => OrderState.ShowConfigurePizzaDialog(special))" style="background-image: url('@special.ImageUrl')"-->
-          <div class="pizza-info">
-          <span class="title">@special.Name</span>
-          @special.Description
-          <span class="price">@special.GetFormattedBasePrice()</span>
-          </div>
-        </li>
-      }
+        <p>What is your name?</p>
+        <input type="text" @bind-value="name" />
+        <button class="checkout-button btn btn-warning" @onclick="StartQuiz">
+        Start quiz
+        </button>
+    } else
+    {
+        <h2>Thank you for participating.</h2>
+        <h3>You learned @OrderState.game.TotalMastered() elements.</h3>
     }
-  </ul>
+
+
 </div>
 
 @if (OrderState.ShowingConfigureDialog)
@@ -58,31 +63,22 @@
 
 }
 
-<div class="sidebar">
-    @if (order.Pizzas.Any())
-    {
-        <div class="order-contents">
-            <h2>Your order</h2>
-
-            
-        </div>
-    }
-    else
-    {
-        <div class="empty-cart">Choose a pizza<br>to get started</div>
-    }
-
-
-</div>
 
 @code {
     List<PizzaSpecial> specials = new List<PizzaSpecial>();
     Order order => OrderState.Order;
+    public string name;
+    
 
     protected override async Task OnInitializedAsync()
     {
         specials = await HttpClient.GetFromJsonAsync<List<PizzaSpecial>>(NavigationManager.BaseUri + "specials");
 
+    }
+
+    protected async Task StartQuiz()
+    {
+        OrderState.ShowQuizDialog();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender) //TODO: don't think this needs to be its own function
@@ -106,7 +102,7 @@
         async Task StoreGame()
         {
             GameResult result = new GameResult();
-            result.Name = "Justin";
+            result.Name = name;
             result.Mastered = OrderState.game.TotalMastered();
             result.GameMode = OrderState.game.POSITIVE_MODE;
             var response = await HttpClient.PostAsJsonAsync(NavigationManager.BaseUri + "game", result);

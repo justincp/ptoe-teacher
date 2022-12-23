@@ -14,14 +14,14 @@ namespace BlazingPizza
         private List<ElementQuestion> masteredQuestions;
         private ElementQuestion question;
 
-        public int WORKING_POOL_SIZE = 4;
+        public int WORKING_POOL_SIZE = 7;
         public int QUIZ_MINUTES = 1;
         public bool POSITIVE_MODE = false;
-        private static readonly string[] CORRECT_POSITIVES = { "Correct,You're smart!", "Correct,You're good!", "Correct,That was really smart!" };
-        private static readonly string[] INCORRECT_POSITIVES = { "Incorrect, Keep trying!" };
-        private static readonly string[] CORRECT_NEGATIVES = { "Correct, It's about time." };
-        private static readonly string[] INCORRECT_NEGATIVES = { "Incorrect,You're dumb!", "Incorrect,You're bad!", "Incorrect Are You Even Trying", "Incorrect,Youre bad at this!" };
-
+        private static readonly string[] CORRECT_POSITIVES = { "Correct, good choice!", "Correct, you're good!", "Correct, that was really smart!","Perfect!","Correct, you're amazing!" };
+        private static readonly string[] INCORRECT_POSITIVES = { "Incorrect, keep trying!","Incorrect, you'll get it next time.", "Incorrect, you're getting there.", "Incorrect, you can do it." };
+        private static readonly string[] CORRECT_NEGATIVES = { "Correct, it's about time.", "Finally.", "Yep.", "Good enough." };
+        private static readonly string[] INCORRECT_NEGATIVES = { "Incorrect, that was bad!", "Incorrect, poor choice!", "Wrong, are you even trying?", "Incorrect, dumb answer!", "No! No! No!", "Not good at all.", "No, are you ever going to get this?" };
+    
         private string strReinforcement;
 
         public ElementQuestion? Question { get => question; }
@@ -58,9 +58,9 @@ namespace BlazingPizza
             }
 
             // set the reinforcement mode
-            POSITIVE_MODE = true; // Settings1.Default.PositiveMode;
-            QUIZ_MINUTES = 1; //  Settings1.Default.QuizMinutes;
-            WORKING_POOL_SIZE = 4; // Settings1.Default.WorkingPoolSize;
+            POSITIVE_MODE = (new Random().Next(0, 2)) > 0;  // Settings1.Default.PositiveMode;
+            //QUIZ_MINUTES = Settings1.Default.QuizMinutes;
+            //WORKING_POOL_SIZE = Settings1.Default.WorkingPoolSize;
 
             // load up the current pool
             FillupCurrentQuestions();

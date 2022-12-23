@@ -6,7 +6,17 @@
     <div class="dialog">
         <div class="dialog-title">
             <h1>What is the element name of @Game.Question.Symbol?</h1>
-            Seconds remaining: @counter
+            @if (@counter > 0)
+            {
+                <p>Seconds remaining: @counter</p>
+            }
+            @if (Game.POSITIVE_MODE)
+            {
+                <p>Elements mastered: @Game.TotalMastered()</p>
+            } else
+            {
+                <p>Mistakes: @mistakes</p>
+            }
         </div>
         <form class="dialog-body">
             <div>
@@ -19,7 +29,7 @@
                 <!--input type="text" @bind="Question.Response"  @onkeydown="@Enter" /-->
                 <EditForm Model="response">
                     <!--InputText @bind-Value="response" @onkeydown="Enter" @bind-Value:event="oninput"/-->
-                    <InputText @bind-Value="response" />
+                    <InputText @ref=itResponse @bind-Value="response" />
                     @if (freezeInputs && pictureFile != "") {
                         <img src="@pictureFile" width="50" height="50"/>
                     }
@@ -72,11 +82,13 @@
 
     public string response = "";
     InputText inputText;
+    private InputText itResponse;
     bool isPreventKey = true;
     private string soundFile = "";
     private string pictureFile = "";
     private bool isCorrect = false;
-    private int counter = 8;
+    private int counter;
+    private int mistakes = 0;
 
     //public void ChangeValue( ChangeEventArgs e)
     //{
@@ -87,6 +99,7 @@
     {
         if (firstRender)
         {
+            counter = Game.QUIZ_MINUTES * 60;
             gameTimer = new(TimeSpan.FromSeconds(1));
             RunGameTimer();
         }
@@ -117,7 +130,7 @@
         }
     }
 
-    private void CheckAnswer()
+    private async void CheckAnswer()
     {
         freezeInputs = true;
         isCorrect = Game.CheckAnswer(response);
@@ -144,6 +157,7 @@
                 // nothing special
             }
 
+            responseTimer = new(TimeSpan.FromSeconds(3));
         }
         else
         {
@@ -169,11 +183,12 @@
 
 
             }
+            mistakes++;
+            responseTimer = new(TimeSpan.FromSeconds(4));
         }
 
-
-        responseTimer = new(TimeSpan.FromSeconds(3));
         RunResponseTimer();
+        await itResponse.Element.Value.FocusAsync();
 
     }
 
