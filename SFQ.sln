@@ -5,6 +5,8 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PTOEQuiz", "PTOEQuiz.csproj", "{9155F84A-B867-427E-9DBE-DCE53B375DBF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PTOEQuizTests", "..\PTOEQuizTests\PTOEQuizTests.csproj", "{B8174CBE-886E-4F25-B5BE-F203A0CC7039}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{9155F84A-B867-427E-9DBE-DCE53B375DBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9155F84A-B867-427E-9DBE-DCE53B375DBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9155F84A-B867-427E-9DBE-DCE53B375DBF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8174CBE-886E-4F25-B5BE-F203A0CC7039}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8174CBE-886E-4F25-B5BE-F203A0CC7039}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8174CBE-886E-4F25-B5BE-F203A0CC7039}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8174CBE-886E-4F25-B5BE-F203A0CC7039}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

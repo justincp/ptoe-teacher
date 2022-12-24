@@ -12,9 +12,9 @@ namespace PTOEQuiz
         private List<ElementQuestion> allQuestions;
         private List<ElementQuestion> currentQuestions;
         private List<ElementQuestion> masteredQuestions;
-        private ElementQuestion question;
+        private ElementQuestion _question;
 
-        public int WORKING_POOL_SIZE = 7;
+        private int WORKING_POOL_SIZE = 7;
         public int QUIZ_MINUTES = 1;
         public bool POSITIVE_MODE = false;
         private static readonly string[] CORRECT_POSITIVES = { "Correct, good choice!", "Correct, you're good!", "Correct, that was really smart!","Perfect!","Correct, you're amazing!" };
@@ -22,9 +22,9 @@ namespace PTOEQuiz
         private static readonly string[] CORRECT_NEGATIVES = { "Correct, it's about time.", "Finally.", "Yep.", "Good enough." };
         private static readonly string[] INCORRECT_NEGATIVES = { "Incorrect, that was bad!", "Incorrect, poor choice!", "Wrong, are you even trying?", "Incorrect, dumb answer!", "No! No! No!", "Not good at all.", "No, are you ever going to get this?" };
     
-        private string strReinforcement;
+        private string strReinforcement = "";
 
-        public ElementQuestion Question { get => question; }
+        public ElementQuestion Question { get => _question; }
 
         public GameManager()
         {
@@ -65,20 +65,37 @@ namespace PTOEQuiz
             // load up the current pool
             FillupCurrentQuestions();
 
+            // start with the current question
+            NextQuestion();
+
         }
 
         public int TotalMastered()
         {
-            return masteredQuestions.Count;
+            if (masteredQuestions == null)
+            {
+                return 0;
+            }
+            else
+            {
+                return masteredQuestions.Count;
+            }
         }
 
         public void NextQuestion()
         {
-            // get our next question
-            int randomQuestionIndex = new Random().Next(0, currentQuestions.Count);
-            question = currentQuestions[randomQuestionIndex];
-            this.strReinforcement= "";
-
+            if (currentQuestions.Count > 0)
+            {
+                // get our next question
+                int randomQuestionIndex = new Random().Next(0, currentQuestions.Count);
+                _question = currentQuestions[randomQuestionIndex];
+                this.strReinforcement = "";
+            }
+            else
+            {
+                // no questions left
+                _question = null;
+            }
         }
 
         public bool CheckAnswer(string userResponse)
