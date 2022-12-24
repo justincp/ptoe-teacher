@@ -59,11 +59,11 @@
 
         @if (Game.POSITIVE_MODE)
         {
-            <h4 align="right"><font color="blue">Elements mastered: @Game.TotalMastered()</font></h4>
+            <h4><font color="blue">Elements mastered: @Game.TotalMastered()   </font></h4>
         }
         else
         {
-            <h4 align="right"><font color="red">Mistakes: @mistakes</font></h4>
+            <h4><font color="red">Mistakes: @mistakes   </font></h4>
         }
     </div>
 </div>
@@ -177,7 +177,7 @@
             else
             {
                 pictureFile = "/img/OIP.jpg";
-                switch (new Random().Next(2))
+                switch (new Random().Next(3))
                 {
                     case 0:
                         soundFile = "/sound/mixkit-crowd-laugh-424.wav";
@@ -185,8 +185,10 @@
                     case 1:
                         soundFile = "/sound/mixkit-arcade-retro-game-over-213.wav";
                         break;
+                    case 2:
+                        soundFile = "/sound/boo.m4a";
+                        break;
                 }
-
 
             }
             mistakes++;

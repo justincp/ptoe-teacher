@@ -28,8 +28,8 @@ namespace PTOEQuiz.Controllers
             //result.GameId = new Random().Next(10000);
 
             _db.GameResults.Attach(result);
-            // await _db.SaveChangesAsync();
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
+            //_db.SaveChanges();
 
             /*Order order = new Order();
             order.CreatedTime = DateTime.Now;
