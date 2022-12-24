@@ -21,14 +21,15 @@
                 <!--InputText @bind-value="response" @onkeydown="@Enter" /-->
                 <!--input type="text" @bind="Question.Response" @bind:event="oninput" @onkeydown="@Enter" /-->
                 <!--input type="text" @bind="Question.Response"  @onkeydown="@Enter" /-->
-                <EditForm Model="response">
+                <!--EditForm Model="response"-->
                     <!--InputText @bind-Value="response" @onkeydown="Enter" @bind-Value:event="oninput"/-->
-                    <InputText @ref=itResponse @bind-Value="response" />
+                    <InputText @ref=itResponse @bind-Value="response" @onkeydown="Enter" hidden="true"/>
+                    <MyInputText @ref="@tb" @bind-Value="response" @onkeydown="Enter" />
                     @if (freezeInputs && pictureFile != "") {
                         <img src="@pictureFile" width="50" height="50"/>
                     }
-                    <!--MyInputText @ref="@tb" @bind-Value="response" @onkeydown="Enter"/-->
-                </EditForm>
+
+                <!--/EditForm-->
                 
                 @if (freezeInputs && !isCorrect) {
                     <div>
@@ -105,6 +106,8 @@
             counter = Game.QUIZ_MINUTES * 60;
             gameTimer = new(TimeSpan.FromSeconds(1));
             RunGameTimer();
+            //await itResponse.Element.Value.FocusAsync();
+            //await tb.Element.Value.FocusAsync();
         }
     }
 
@@ -191,7 +194,7 @@
         }
 
         RunResponseTimer();
-        await itResponse.Element.Value.FocusAsync();
+
 
     }
 
@@ -207,6 +210,8 @@
             soundFile = "";
             pictureFile = "";
             StateHasChanged();
+            //await itResponse.Element.Value.FocusAsync();
+            //await tb.Element.Value.FocusAsync();
             break;
         }
         responseTimer.Dispose();
