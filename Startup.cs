@@ -4,10 +4,12 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
+using PTOEQuiz.Services;
+using PTOEQuiz.Data;
 
 namespace PTOEQuiz
 {
-  public class Startup
+    public class Startup
     {
         public Startup(IConfiguration configuration)
         {
@@ -25,7 +27,7 @@ namespace PTOEQuiz
             services.AddHttpClient();
             services.AddDbContext<GameContext>(options => 
                 options.UseSqlite("Data Source=game.db"));
-            services.AddScoped<OrderState>();
+            services.AddScoped<GameState>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

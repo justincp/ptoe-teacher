@@ -5,9 +5,9 @@ using System.Diagnostics;
 using System.Net.Http;
 using System.Threading.Tasks;
 
-namespace PTOEQuiz
+namespace PTOEQuiz.Services
 {
-    public class OrderState
+    public class GameState
     {
         public bool ShowingConfigureDialog { get; private set; }
 
@@ -25,19 +25,19 @@ namespace PTOEQuiz
         public void ShowQuizDialog()
         {
 
-            ShowingConfigureDialog= true;
+            ShowingConfigureDialog = true;
         }
 
         public void CancelConfigurePizzaDialog()
         {
-            
+
 
             ShowingConfigureDialog = false;
         }
 
         public void ConfirmConfigurePizzaDialog()
         {
-           
+
 
             ShowingConfigureDialog = false;
         }
@@ -54,7 +54,7 @@ namespace PTOEQuiz
         public void OnKeyDown()
         {
             game.CheckAnswer(game.Question.Response); // TODO: could just be private variable
- 
+
             //ShowingConfigureDialog = false;
             //ShowingResponseDialog = true;
         }

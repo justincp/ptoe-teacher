@@ -2,7 +2,8 @@
 @layout MainLayout
 @inject HttpClient HttpClient
 @inject NavigationManager NavigationManager
-@inject OrderState OrderState
+@using PTOEQuiz.Services;
+@inject GameState GameState
 
 
 
@@ -10,7 +11,7 @@
 <h1>Welcome to the Periodic Table of Elements Teacher</h1>
 <ol>
 
-    <li>Learn as many words as you can within the time limit.</li>
+    <li>Learn as many elements as you can within the time limit.</li>
     <li>Please only take the quiz one time.</li>
     <li>Please do not discuss the experience with others who have not taken the quiz.</li> 
         <li>
@@ -19,7 +20,7 @@
 </ol>
     <audio src="/sound/Imagination-AShamaluevMusic.mp3" autoplay controls />
     
-    @if (!OrderState.gameFinished)
+    @if (!GameState.gameFinished)
     {
         <h3>What is your name?</h3>
         <input type="text" @bind-value="name" />
@@ -33,42 +34,42 @@
     } else
     {
         <h2>Thank you for participating.</h2>
-        <h3>You learned @OrderState.game.TotalMastered() elements.</h3>
+        <h3>You learned @GameState.game.TotalMastered() elements.</h3>
     }
 
 </div>
 
-@if (OrderState.ShowingConfigureDialog)
+@if (GameState.ShowingConfigureDialog)
 {
     <!--QuizDialog Question="game.Question"
-            OnCancel="OrderState.CancelConfigurePizzaDialog"
-            OnConfirm="OrderState.ConfirmConfigurePizzaDialog" /-->
+            OnCancel="GameState.CancelConfigurePizzaDialog"
+            OnConfirm="GameState.ConfirmConfigurePizzaDialog" /-->
 
 
     <QuizDialog
-      Question="OrderState.Question"
-      OnCancel="OrderState.CancelConfigurePizzaDialog"
-      OnConfirm="OrderState.ConfirmConfigurePizzaDialog"
-      OnKeyDown="OrderState.OnKeyDown"
-      Game="OrderState.game"
-      GameOver="OrderState.GameOver"
+      Question="GameState.Question"
+      OnCancel="GameState.CancelConfigurePizzaDialog"
+      OnConfirm="GameState.ConfirmConfigurePizzaDialog"
+      OnKeyDown="GameState.OnKeyDown"
+      Game="GameState.game"
+      GameOver="GameState.GameOver"
       />
 
 }
 
-@if (OrderState.ShowingResponseDialog)
+@if (GameState.ShowingResponseDialog)
 {
     <!--QuizDialog Question="game.Question"
-            OnCancel="OrderState.CancelConfigurePizzaDialog"
-            OnConfirm="OrderState.ConfirmConfigurePizzaDialog" /-->
+            OnCancel="GameState.CancelConfigurePizzaDialog"
+            OnConfirm="GameState.ConfirmConfigurePizzaDialog" /-->
 
 
     <ResponseDialog
-      Question="OrderState.Question"
-      OnCancel="OrderState.CancelConfigurePizzaDialog"
-      OnConfirm="OrderState.ConfirmConfigurePizzaDialog"
-      OnKeyDown="OrderState.OnKeyDown"
-      Game="OrderState.game"
+      Question="GameState.Question"
+      OnCancel="GameState.CancelConfigurePizzaDialog"
+      OnConfirm="GameState.ConfirmConfigurePizzaDialog"
+      OnKeyDown="GameState.OnKeyDown"
+      Game="GameState.game"
       />
 
 }
@@ -88,21 +89,21 @@
 
     protected async Task StartQuiz()
     {
-        OrderState.ShowQuizDialog();
+        GameState.ShowQuizDialog();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender) //TODO: don't think this needs to be its own function
     {
         if (firstRender)
         {
-            OrderState.game = new GameManager();
-            OrderState.game.NextQuestion();
-            OrderState.Question = OrderState.game.Question;
+            GameState.game = new GameManager();
+            GameState.game.NextQuestion();
+            GameState.Question = GameState.game.Question;
         }
 
-        if (OrderState.gameFinished)
+        if (GameState.gameFinished)
         { await StoreGame();
-            OrderState.gameFinished = false;
+            GameState.gameFinished = false;
         }
 
 
@@ -113,8 +114,8 @@
         {
             GameResult result = new GameResult();
             result.Name = name;
-            result.Mastered = OrderState.game.TotalMastered();
-            result.GameMode = OrderState.game.POSITIVE_MODE;
+            result.Mastered = GameState.game.TotalMastered();
+            result.GameMode = GameState.game.POSITIVE_MODE;
             var response = await HttpClient.PostAsJsonAsync(NavigationManager.BaseUri + "game", result);
             var newOrderId = await response.Content.ReadFromJsonAsync<int>();
         }
