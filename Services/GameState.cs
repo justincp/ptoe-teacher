@@ -65,6 +65,8 @@ namespace PTOEQuiz.Services
             ShowingConfigureDialog = false;
             Debug.WriteLine(game.TotalMastered());
             gameFinished = true;
+
+            await Task.Yield();
         }
 
 

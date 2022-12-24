@@ -24,7 +24,7 @@ namespace PTOEQuiz
     
         private string strReinforcement;
 
-        public ElementQuestion? Question { get => question; }
+        public ElementQuestion Question { get => question; }
 
         public GameManager()
         {

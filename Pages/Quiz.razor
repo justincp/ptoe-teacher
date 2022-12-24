@@ -41,10 +41,6 @@
 
 @if (GameState.ShowingConfigureDialog)
 {
-    <!--QuizDialog Question="game.Question"
-            OnCancel="GameState.CancelConfigurePizzaDialog"
-            OnConfirm="GameState.ConfirmConfigurePizzaDialog" /-->
-
 
     <QuizDialog
       Question="GameState.Question"
@@ -57,42 +53,19 @@
 
 }
 
-@if (GameState.ShowingResponseDialog)
-{
-    <!--QuizDialog Question="game.Question"
-            OnCancel="GameState.CancelConfigurePizzaDialog"
-            OnConfirm="GameState.ConfirmConfigurePizzaDialog" /-->
-
-
-    <ResponseDialog
-      Question="GameState.Question"
-      OnCancel="GameState.CancelConfigurePizzaDialog"
-      OnConfirm="GameState.ConfirmConfigurePizzaDialog"
-      OnKeyDown="GameState.OnKeyDown"
-      Game="GameState.game"
-      />
-
-}
-
-
 
 @code {
 
     public string name = "";
-    
-
-    protected override async Task OnInitializedAsync()
-    {
-
-
-    }
 
     protected async Task StartQuiz()
     {
         GameState.ShowQuizDialog();
+
+        await Task.Yield();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender) //TODO: don't think this needs to be its own function
+    protected override async Task OnAfterRenderAsync(bool firstRender) 
     {
         if (firstRender)
         {
@@ -105,8 +78,6 @@
         { await StoreGame();
             GameState.gameFinished = false;
         }
-
-
 
     }
 

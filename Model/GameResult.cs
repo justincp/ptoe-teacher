@@ -18,5 +18,7 @@ namespace PTOEQuiz
 
         public DateTime CreatedTime { get; set; }
 
+        public string IPaddress { get; set; }
+
     }
 }

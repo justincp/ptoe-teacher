@@ -5,44 +5,45 @@
 <div class="dialog-container">
     <div class="dialog">
         <div class="dialog-title">
-            <h1>What is the element name of @Game.Question.Symbol?</h1>
             @if (@counter > 0)
             {
-                <p>Seconds remaining: @counter</p>
+                <h3>Seconds remaining: @counter</h3>
             }
-           
+            @if (Game.POSITIVE_MODE)
+            {
+                <h3><font color="blue">Elements mastered: @Game.TotalMastered()</font></h3>
+            }
+            else
+            {
+                <h3><font color="red">Mistakes: @mistakes   </font></h3>
+            }
+    
         </div>
+        <h1>What is the element name of @Game.Question.Symbol?</h1>
         <form class="dialog-body">
+            
             <div>
-                <label>Element name:</label>
-                <!--input @bind-value="response" @bind-value:event="oninput" @onkeypress="Enter" @onkeypress:preventDefault="isPreventKey" @onkeypress:stopPropagation/-->
-                <!--input @bind="@response" @onkeydown="Enter" @onkeypress:preventDefault @onkeypress:stopPropagation @onchangevalue="ChangeValue" /-->
-                <!--input @bind-value="@response" @onkeydown="Enter" @onkeypress:preventDefault @onkeypress:stopPropagation /-->
-                <!--InputText @bind-value="response" @onkeydown="@Enter" /-->
-                <!--input type="text" @bind="Question.Response" @bind:event="oninput" @onkeydown="@Enter" /-->
-                <!--input type="text" @bind="Question.Response"  @onkeydown="@Enter" /-->
-                <!--EditForm Model="response"-->
-                    <!--InputText @bind-Value="response" @onkeydown="Enter" @bind-Value:event="oninput"/-->
-                    <InputText @ref=itResponse @bind-Value="response" @onkeydown="Enter" hidden="true"/>
-                    <MyInputText @ref="@tb" @bind-Value="response" @onkeydown="Enter" />
-                    @if (freezeInputs && pictureFile != "") {
-                        <img src="@pictureFile" width="50" height="50"/>
-                    }
-
-                <!--/EditForm-->
                 
-                @if (freezeInputs && !isCorrect) {
+                <label>Element name:</label>
+                <InputText @ref=itResponse @bind-Value="response" @onkeydown="Enter" hidden="true" />
+                <MyInputText @ref="@tb" @bind-Value="response" @onkeydown="Enter" />
+                @if (freezeInputs && pictureFile != "")
+                {
+                    <img src="@pictureFile" width="50" height="50" />
+                }
+
+                @if (freezeInputs && !isCorrect)
+                {
                     <div>
                         <h3>@Game.Question.Name</h3>
                     </div>
                 }
 
             </div>
-            
+
         </form>
 
         <div class="dialog-buttons">
-            <!--button class="btn btn-secondary mr-auto" @onclick="OnCancel">Cancel</!--button-->
             <h2>
                 <span class="mr-center">
                     @Game.Reinforcment()
@@ -51,26 +52,21 @@
             @if (!freezeInputs)
             {
                 <button class="btn btn-success ml-auto" @onclick="Click">Check answer</button>
-            } else
+            }
+            else
             {
                 <audio autoplay><source src=@soundFile /></audio>
             }
         </div>
 
-        @if (Game.POSITIVE_MODE)
-        {
-            <h4><font color="blue">Elements mastered: @Game.TotalMastered()   </font></h4>
-        }
-        else
-        {
-            <h4><font color="red">Mistakes: @mistakes   </font></h4>
-        }
+
     </div>
 </div>
 
 @code {
-    //private string response = "";
+
     MyInputText tb;
+    private InputText itResponse; // bogus invisible text box to keep form from disappearing
 
     private bool freezeInputs = false;
 
@@ -85,19 +81,11 @@
     PeriodicTimer gameTimer;
 
     public string response = "";
-    InputText inputText;
-    private InputText itResponse;
-    bool isPreventKey = true;
     private string soundFile = "";
     private string pictureFile = "";
     private bool isCorrect = false;
     private int counter;
     private int mistakes = 0;
-
-    //public void ChangeValue( ChangeEventArgs e)
-    //{
-    //    Question.Response = response;
-    //}
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
@@ -106,37 +94,30 @@
             counter = Game.QUIZ_MINUTES * 60;
             gameTimer = new(TimeSpan.FromSeconds(1));
             RunGameTimer();
-            //await itResponse.Element.Value.FocusAsync();
-            //await tb.Element.Value.FocusAsync();
+            //await tb.Element.Value.FocusAsync(); // causing an error-don't know why
         }
+
+        await Task.Yield();
     }
 
-    public async Task Click (MouseEventArgs e)
+    public async Task Click(MouseEventArgs e)
     {
         CheckAnswer();
 
+        await Task.Yield();
     }
 
-    public async Task Enter (KeyboardEventArgs e)
+    public async Task Enter(KeyboardEventArgs e)
     {
-
-        StateHasChanged();
-        //isPreventKey = false;
-
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
             Question.Response = response;
-
-            //e.Code = "";
-
-
             CheckAnswer();
-
-
         }
+        await Task.Yield();
     }
 
-    private async void CheckAnswer()
+    private void CheckAnswer()
     {
         freezeInputs = true;
         isCorrect = Game.CheckAnswer(response);
@@ -196,14 +177,13 @@
         }
 
         RunResponseTimer();
-
-
     }
 
 
     async void RunResponseTimer()
     {
-        while (await responseTimer.WaitForNextTickAsync()) { 
+        while (await responseTimer.WaitForNextTickAsync())
+        {
             Game.NextQuestion();
             Question = Game.Question;
             Question.Response = "";
@@ -212,8 +192,7 @@
             soundFile = "";
             pictureFile = "";
             StateHasChanged();
-            //await itResponse.Element.Value.FocusAsync();
-            //await tb.Element.Value.FocusAsync();
+            //await tb.Element.Value.FocusAsync(); // doesn't work - don't know hy
             break;
         }
         responseTimer.Dispose();
@@ -223,17 +202,18 @@
     {
         while (await gameTimer.WaitForNextTickAsync())
         {
-            if (counter > 0 )
+            if (counter > 0)
             {
                 counter -= 1;
-                InvokeAsync(StateHasChanged);
-            } else
+                await InvokeAsync(StateHasChanged);
+            }
+            else
             {
                 break;
             }
         }
         gameTimer.Dispose();
-        GameOver.InvokeAsync();
+        await GameOver.InvokeAsync();
     }
 
     public void Dispose()
