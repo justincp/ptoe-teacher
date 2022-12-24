@@ -4,27 +4,37 @@
 @inject NavigationManager NavigationManager
 @inject OrderState OrderState
 
+
+
 <div class="main">
 <h1>Welcome to the Periodic Table of Elements Teacher</h1>
 <ol>
-    <li> Learn as many words as you can within the time limit.</li>
-    <li> Please only take the quiz one time.</li>
-    <li>Please do not discuss the experience with others.</li>  
-</ol>
 
+    <li>Learn as many words as you can within the time limit.</li>
+    <li>Please only take the quiz one time.</li>
+    <li>Please do not discuss the experience with others who have not taken the quiz.</li> 
+        <li>
+            Please make sure your computer sound is working.
+        </li>
+</ol>
+    <audio src="/sound/Imagination-AShamaluevMusic.mp3" autoplay controls />
+    
     @if (!OrderState.gameFinished)
     {
-        <p>What is your name?</p>
+        <h3>What is your name?</h3>
         <input type="text" @bind-value="name" />
-        <button class="checkout-button btn btn-warning" @onclick="StartQuiz">
-        Start quiz
-        </button>
+        @if (name != "")
+        {
+            <button class="checkout-button btn btn-warning" @onclick="StartQuiz">
+                Start quiz
+            </button>
+        }
+   
     } else
     {
         <h2>Thank you for participating.</h2>
         <h3>You learned @OrderState.game.TotalMastered() elements.</h3>
     }
-
 
 </div>
 
@@ -64,9 +74,10 @@
 }
 
 
+
 @code {
 
-    public string name;
+    public string name = "";
     
 
     protected override async Task OnInitializedAsync()

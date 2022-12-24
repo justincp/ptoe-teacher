@@ -8,16 +8,16 @@
     <None Include="wwwroot\img\Checkmark.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="wwwroot\img\mixkit-arcade-retro-game-over-213.wav">
+    <None Include="wwwroot\sound\mixkit-arcade-retro-game-over-213.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="wwwroot\img\mixkit-crowd-laugh-424.wav">
+    <None Include="wwwroot\sound\mixkit-crowd-laugh-424.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="wwwroot\img\mixkit-retro-game-notification-212.wav">
+    <None Include="wwwroot\sound\mixkit-retro-game-notification-212.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="wwwroot\img\mixkit-small-crowd-ovation-437.wav">
+    <None Include="wwwroot\sound\mixkit-small-crowd-ovation-437.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="wwwroot\img\OIP.jpg">

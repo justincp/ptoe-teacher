@@ -10,13 +10,7 @@
             {
                 <p>Seconds remaining: @counter</p>
             }
-            @if (Game.POSITIVE_MODE)
-            {
-                <p>Elements mastered: @Game.TotalMastered()</p>
-            } else
-            {
-                <p>Mistakes: @mistakes</p>
-            }
+           
         </div>
         <form class="dialog-body">
             <div>
@@ -61,6 +55,15 @@
                 <audio autoplay><source src=@soundFile /></audio>
             }
         </div>
+
+        @if (Game.POSITIVE_MODE)
+        {
+            <h4 align="right"><font color="blue">Elements mastered: @Game.TotalMastered()</font></h4>
+        }
+        else
+        {
+            <h4 align="right"><font color="red">Mistakes: @mistakes</font></h4>
+        }
     </div>
 </div>
 
@@ -142,10 +145,10 @@
                 switch (new Random().Next(2))
                 {
                     case 0:
-                        soundFile = "/img/mixkit-retro-game-notification-212.wav";
+                        soundFile = "/sound/mixkit-retro-game-notification-212.wav";
                         break;
                     case 1:
-                        soundFile = "/img/mixkit-small-crowd-ovation-437.wav";
+                        soundFile = "/sound/mixkit-small-crowd-ovation-437.wav";
                         break;
                 }
                 pictureFile = "/img/Checkmark.png";
@@ -174,10 +177,10 @@
                 switch (new Random().Next(2))
                 {
                     case 0:
-                        soundFile = "/img/mixkit-crowd-laugh-424.wav";
+                        soundFile = "/sound/mixkit-crowd-laugh-424.wav";
                         break;
                     case 1:
-                        soundFile = "/img/mixkit-arcade-retro-game-over-213.wav";
+                        soundFile = "/sound/mixkit-arcade-retro-game-over-213.wav";
                         break;
                 }
 
