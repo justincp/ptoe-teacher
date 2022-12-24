@@ -109,6 +109,9 @@
 
     public async Task Enter(KeyboardEventArgs e)
     {
+        if (freezeInputs)
+            e.Code = "";
+
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
             Question.Response = response;
