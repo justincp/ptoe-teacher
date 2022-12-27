@@ -9,9 +9,9 @@
             {
                 <h3>Seconds remaining: @counter</h3>
             }
-            @if (Game.POSITIVE_MODE)
+            @if (Quiz.POSITIVE_MODE)
             {
-                <h3><font color="blue">Elements mastered: @Game.TotalMastered()</font></h3>
+                <h3><font color="blue">Elements mastered: @Quiz.TotalMastered()</font></h3>
             }
             else
             {
@@ -19,7 +19,7 @@
             }
     
         </div>
-        <h1>What is the element name of @Game.Question.Symbol?</h1>
+        <h1>What is the element name of @Quiz.Question.Symbol?</h1>
         <form class="dialog-body">
             
             <div>
@@ -35,7 +35,7 @@
                 @if (freezeInputs && !isCorrect)
                 {
                     <div>
-                        <h3>@Game.Question.Name</h3>
+                        <h3>@Quiz.Question.Name</h3>
                     </div>
                 }
 
@@ -46,7 +46,7 @@
         <div class="dialog-buttons">
             <h2>
                 <span class="mr-center">
-                    @Game.Reinforcment()
+                    @Quiz.Reinforcment()
                 </span>
             </h2>
             @if (!freezeInputs)
@@ -70,15 +70,15 @@
 
     private bool freezeInputs = false;
 
-    [Parameter] public GameManager Game { get; set; }
+    [Parameter] public ElementQuiz Quiz { get; set; }
     [Parameter] public ElementQuestion Question { get; set; }
     [Parameter] public EventCallback OnCancel { get; set; }
     [Parameter] public EventCallback OnConfirm { get; set; }
     [Parameter] public EventCallback OnKeyDown { get; set; }
-    [Parameter] public EventCallback GameOver { get; set; }
+    [Parameter] public EventCallback QuizOver { get; set; }
 
     PeriodicTimer responseTimer;
-    PeriodicTimer gameTimer;
+    PeriodicTimer QuizTimer;
 
     public string response = "";
     private string soundFile = "";
@@ -91,9 +91,9 @@
     {
         if (firstRender)
         {
-            counter = Game.QUIZ_MINUTES * 60;
-            gameTimer = new(TimeSpan.FromSeconds(1));
-            RunGameTimer();
+            counter = Quiz.QUIZ_MINUTES * 60;
+            QuizTimer = new(TimeSpan.FromSeconds(1));
+            RunQuizTimer();
             //await tb.Element.Value.FocusAsync(); // causing an error-don't know why
         }
 
@@ -123,11 +123,11 @@
     private void CheckAnswer()
     {
         freezeInputs = true;
-        isCorrect = Game.CheckAnswer(response);
+        isCorrect = Quiz.CheckAnswer(response);
 
         if (isCorrect)
         {
-            if (Game.POSITIVE_MODE)
+            if (Quiz.POSITIVE_MODE)
             {
                 switch (new Random().Next(2))
                 {
@@ -152,7 +152,7 @@
         else
         {
 
-            if (Game.POSITIVE_MODE)
+            if (Quiz.POSITIVE_MODE)
             {
                 // nothing special
                 soundFile = "";
@@ -187,8 +187,8 @@
     {
         while (await responseTimer.WaitForNextTickAsync())
         {
-            Game.NextQuestion();
-            Question = Game.Question;
+            Quiz.NextQuestion();
+            Question = Quiz.Question;
             Question.Response = "";
             response = "";
             freezeInputs = false;
@@ -201,9 +201,9 @@
         responseTimer.Dispose();
     }
 
-    async void RunGameTimer()
+    async void RunQuizTimer()
     {
-        while (await gameTimer.WaitForNextTickAsync())
+        while (await QuizTimer.WaitForNextTickAsync())
         {
             if (counter > 0)
             {
@@ -215,14 +215,14 @@
                 break;
             }
         }
-        gameTimer.Dispose();
-        await GameOver.InvokeAsync();
+        QuizTimer.Dispose();
+        await QuizOver.InvokeAsync();
     }
 
     public void Dispose()
     {
         responseTimer?.Dispose();
-        gameTimer?.Dispose();
+        QuizTimer?.Dispose();
     }
 
 

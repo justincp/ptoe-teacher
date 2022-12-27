@@ -2,14 +2,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace PTOEQuiz.Data
 {
-    public class GameContext : DbContext
+    public class QuizContext : DbContext
     {
-        public GameContext(
+        public QuizContext(
             DbContextOptions options) : base(options)
         {
         }
 
-        public DbSet<GameResult> GameResults { get; set; }
+        public DbSet<QuizResult> QuizResults { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

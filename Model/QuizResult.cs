@@ -5,14 +5,14 @@ using System.Linq;
 
 namespace PTOEQuiz
 {
-    public class GameResult
+    public class QuizResult
     {
         [Key]
-        public int GameId { get; set; }
+        public int QuizId { get; set; }
 
         public string Name { get; set; }
 
-        public bool GameMode { get; set; }
+        public bool QuizMode { get; set; }
 
         public int Mastered {get; set;}
 

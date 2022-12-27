@@ -9,29 +9,29 @@ using PTOEQuiz.Data;
 
 namespace PTOEQuiz.Controllers
 {
-    [Route("game")]
+    [Route("Quiz")]
     [ApiController]
 
-    public class GameController : Controller
+    public class QuizController : Controller
     {
-        private readonly GameContext _db;
+        private readonly QuizContext _db;
 
-        public GameController(GameContext db)
+        public QuizController(QuizContext db)
         {
             _db = db;
         }
 
 
         [HttpPost]
-        public async Task<ActionResult<int>> StoreResult(GameResult result)
+        public async Task<ActionResult<int>> StoreResult(QuizResult result)
         {
             result.CreatedTime = DateTime.Now;
             result.IPaddress = HttpContext.Connection.RemoteIpAddress?.ToString();
 
-            _db.GameResults.Attach(result);
+            _db.QuizResults.Attach(result);
             await _db.SaveChangesAsync();
 
-            return result.GameId;
+            return result.QuizId;
         }
 
 

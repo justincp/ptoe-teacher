@@ -22,7 +22,7 @@ namespace PTOEQuiz
             var scopeFactory = host.Services.GetRequiredService<IServiceScopeFactory>();
             using (var scope = scopeFactory.CreateScope())
             {
-                var db = scope.ServiceProvider.GetRequiredService<GameContext>();
+                var db = scope.ServiceProvider.GetRequiredService<QuizContext>();
                 if (db.Database.EnsureCreated())
                 {
                     SeedData.Initialize(db);

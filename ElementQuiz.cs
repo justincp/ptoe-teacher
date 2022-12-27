@@ -6,7 +6,7 @@ using System.Text.RegularExpressions;
 
 namespace PTOEQuiz
 {
-    public class GameManager
+    public class ElementQuiz
     {
 
         private List<ElementQuestion> allQuestions;
@@ -26,7 +26,7 @@ namespace PTOEQuiz
 
         public ElementQuestion Question { get => _question; }
 
-        public GameManager()
+        public ElementQuiz()
         {
             // initialize
             allQuestions = new List<ElementQuestion>();
@@ -113,22 +113,22 @@ namespace PTOEQuiz
 
                 if (POSITIVE_MODE)
                 {
-                    strReinforcement = CORRECT_POSITIVES[new Random().Next(0, GameManager.CORRECT_POSITIVES.Length)];
+                    strReinforcement = CORRECT_POSITIVES[new Random().Next(0, ElementQuiz.CORRECT_POSITIVES.Length)];
                 }
                 else
                 {
-                    strReinforcement = CORRECT_NEGATIVES[new Random().Next(0, GameManager.CORRECT_NEGATIVES.Length)];
+                    strReinforcement = CORRECT_NEGATIVES[new Random().Next(0, ElementQuiz.CORRECT_NEGATIVES.Length)];
                 }
             }
             else
             {
                 if (POSITIVE_MODE)
                 {
-                    strReinforcement = INCORRECT_POSITIVES[new System.Random().Next(0, GameManager.INCORRECT_POSITIVES.Length)];
+                    strReinforcement = INCORRECT_POSITIVES[new System.Random().Next(0, ElementQuiz.INCORRECT_POSITIVES.Length)];
                 }
                 else
                 {
-                    strReinforcement = INCORRECT_NEGATIVES[new Random().Next(0, GameManager.INCORRECT_NEGATIVES.Length)];
+                    strReinforcement = INCORRECT_NEGATIVES[new Random().Next(0, ElementQuiz.INCORRECT_NEGATIVES.Length)];
                 }
             }
 

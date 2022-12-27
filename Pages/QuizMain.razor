@@ -3,8 +3,7 @@
 @inject HttpClient HttpClient
 @inject NavigationManager NavigationManager
 @using PTOEQuiz.Services;
-@inject GameState GameState
-
+@inject QuizState QuizState
 
 
 <div class="main">
@@ -20,7 +19,7 @@
 </ol>
     <audio src="/sound/Imagination-AShamaluevMusic.mp3" autoplay controls />
     
-    @if (!GameState.gameFinished)
+    @if (!QuizState.QuizFinished)
     {
         <h3>What is your name?</h3>
         <input type="text" @bind-value="name" />
@@ -34,21 +33,18 @@
     } else
     {
         <h2>Thank you for participating.</h2>
-        <h3>You learned @GameState.game.TotalMastered() elements.</h3>
+        <h3>You learned @QuizState.Quiz.TotalMastered() elements.</h3>
     }
 
 </div>
 
-@if (GameState.ShowingConfigureDialog)
+@if (QuizState.ShowingConfigureDialog)
 {
 
     <QuizDialog
-      Question="GameState.Question"
-      OnCancel="GameState.CancelConfigurePizzaDialog"
-      OnConfirm="GameState.ConfirmConfigurePizzaDialog"
-      OnKeyDown="GameState.OnKeyDown"
-      Game="GameState.game"
-      GameOver="GameState.GameOver"
+      Question="QuizState.Question"
+      Quiz="QuizState.Quiz"
+      QuizOver="QuizState.QuizOver"
       />
 
 }
@@ -60,7 +56,7 @@
 
     protected async Task StartQuiz()
     {
-        GameState.ShowQuizDialog();
+        QuizState.ShowQuizDialog();
 
         await Task.Yield();
     }
@@ -69,25 +65,27 @@
     {
         if (firstRender)
         {
-            GameState.game = new GameManager();
-            GameState.game.NextQuestion();
-            GameState.Question = GameState.game.Question;
+            QuizState.Quiz = new ElementQuiz();
+            QuizState.Quiz.NextQuestion();
+            QuizState.Question = QuizState.Quiz.Question;
         }
 
-        if (GameState.gameFinished)
-        { await StoreGame();
-            GameState.gameFinished = false;
+        if (QuizState.QuizFinished)
+        { await StoreQuiz();
+            QuizState.QuizFinished = false;
         }
 
     }
 
-        async Task StoreGame()
+        async Task StoreQuiz()
         {
-            GameResult result = new GameResult();
+            Debug.WriteLine(Quiz.TotalMastered());
+
+            QuizResult result = new QuizResult();
             result.Name = name;
-            result.Mastered = GameState.game.TotalMastered();
-            result.GameMode = GameState.game.POSITIVE_MODE;
-            var response = await HttpClient.PostAsJsonAsync(NavigationManager.BaseUri + "game", result);
+            result.Mastered = QuizState.Quiz.TotalMastered();
+            result.QuizMode = QuizState.Quiz.POSITIVE_MODE;
+            var response = await HttpClient.PostAsJsonAsync(NavigationManager.BaseUri + "Quiz", result);
             var newOrderId = await response.Content.ReadFromJsonAsync<int>();
         }
 

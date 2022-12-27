@@ -25,9 +25,9 @@ namespace PTOEQuiz
             services.AddRazorPages();
             services.AddServerSideBlazor();
             services.AddHttpClient();
-            services.AddDbContext<GameContext>(options => 
-                options.UseSqlite("Data Source=game.db"));
-            services.AddScoped<GameState>();
+            services.AddDbContext<QuizContext>(options => 
+                options.UseSqlite("Data Source=Quiz.db"));
+            services.AddScoped<QuizState>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
