@@ -1,4 +1,5 @@
 @page "/"
+@namespace PTOEQuiz.Pages
 @layout MainLayout
 @inject HttpClient HttpClient
 @inject NavigationManager NavigationManager
@@ -52,7 +53,7 @@
 
 @code {
 
-    public string name = "";
+    public string name { get; private set; } = "";
 
     protected async Task StartQuiz()
     {
@@ -76,10 +77,10 @@
         }
 
     }
-
+        
         async Task StoreQuiz()
         {
-            QuizResult result = new QuizResult();
+            QuizResult result = new();
             result.Name = name;
             result.Mastered = QuizState.Quiz.TotalMastered();
             result.QuizMode = QuizState.Quiz.POSITIVE_MODE;

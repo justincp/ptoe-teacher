@@ -5,7 +5,7 @@ VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PTOEQuiz", "PTOEQuiz.csproj", "{9155F84A-B867-427E-9DBE-DCE53B375DBF}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PTOEQuizProjectTests", "..\PTOEQuizTests\PTOEQuizProjectTests.csproj", "{5DDC1395-495A-4DE0-A966-4808E637A9F0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PTOEBlazorTest", "..\PTOEBlazorTest\PTOEBlazorTest.csproj", "{B4BE7D44-C21E-4C63-A5B2-470308F9472E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,10 +17,10 @@ Global
 		{9155F84A-B867-427E-9DBE-DCE53B375DBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9155F84A-B867-427E-9DBE-DCE53B375DBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9155F84A-B867-427E-9DBE-DCE53B375DBF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5DDC1395-495A-4DE0-A966-4808E637A9F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5DDC1395-495A-4DE0-A966-4808E637A9F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5DDC1395-495A-4DE0-A966-4808E637A9F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5DDC1395-495A-4DE0-A966-4808E637A9F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B4BE7D44-C21E-4C63-A5B2-470308F9472E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B4BE7D44-C21E-4C63-A5B2-470308F9472E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B4BE7D44-C21E-4C63-A5B2-470308F9472E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B4BE7D44-C21E-4C63-A5B2-470308F9472E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

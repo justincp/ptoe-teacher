@@ -26,7 +26,7 @@ namespace PTOEQuiz.Services
         public async void QuizOver()
         {
             ShowingConfigureDialog = false;
-            Debug.WriteLine(Quiz.TotalMastered());
+            
             QuizFinished = true;
 
             await Task.Yield();
