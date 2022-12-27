@@ -79,8 +79,6 @@
 
         async Task StoreQuiz()
         {
-            Debug.WriteLine(Quiz.TotalMastered());
-
             QuizResult result = new QuizResult();
             result.Name = name;
             result.Mastered = QuizState.Quiz.TotalMastered();
