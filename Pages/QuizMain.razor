@@ -8,18 +8,18 @@
 
 
 <div class="main">
-<h1>Welcome to the Periodic Table of Elements Teacher</h1>
-<ol>
+    <h1>Welcome to the Periodic Table of Elements Teacher</h1>
+    <ol>
 
-    <li>Learn as many elements as you can within the time limit.</li>
-    <li>Please only take the quiz one time.</li>
-    <li>Please do not discuss the experience with others who have not taken the quiz.</li> 
+        <li>Learn as many elements as you can within the time limit.</li>
+        <li>Please only take the quiz one time.</li>
+        <li>Please do not discuss the experience with others who have not taken the quiz.</li>
         <li>
             Please make sure your computer sound is working.
         </li>
-</ol>
+    </ol>
     <audio src="/sound/Imagination-AShamaluevMusic.mp3" autoplay controls />
-    
+
     @if (!QuizState.QuizFinished)
     {
         <h3>What is your name?</h3>
@@ -30,8 +30,9 @@
                 Start quiz
             </button>
         }
-   
-    } else
+
+    }
+    else
     {
         <h2>Thank you for participating.</h2>
         <h3>You learned @QuizState.Quiz.TotalMastered() elements.</h3>
@@ -42,17 +43,18 @@
 @if (QuizState.ShowingConfigureDialog)
 {
 
-    <QuizDialog
-      Question="QuizState.Question"
-      Quiz="QuizState.Quiz"
-      QuizOver="QuizState.QuizOver"
-      />
+    <QuizDialog 
+            Quiz="QuizState.Quiz"
+            QuizOver="QuizState.QuizOver" />
 
 }
 
 
 @code {
 
+    /// <summary>
+    /// The name of the person taking the exam.
+    /// </summary>
     public string name { get; private set; } = "";
 
     protected async Task StartQuiz()
@@ -62,7 +64,7 @@
         await Task.Yield();
     }
 
-    protected override async Task OnAfterRenderAsync(bool firstRender) 
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
@@ -72,22 +74,21 @@
         }
 
         if (QuizState.QuizFinished)
-        { await StoreQuiz();
+        {
+            await StoreQuiz();
             QuizState.QuizFinished = false;
         }
 
     }
-        
-        async Task StoreQuiz()
-        {
-            QuizResult result = new();
-            result.Name = name;
-            result.Mastered = QuizState.Quiz.TotalMastered();
-            result.QuizMode = QuizState.Quiz.POSITIVE_MODE;
-            var response = await HttpClient.PostAsJsonAsync(NavigationManager.BaseUri + "Quiz", result);
-            var newOrderId = await response.Content.ReadFromJsonAsync<int>();
-        }
 
+    async Task StoreQuiz()
+    {
+        QuizResult result = new();
+        result.Name = name;
+        result.Mastered = QuizState.Quiz.TotalMastered();
+        result.QuizMode = QuizState.Quiz.POSITIVE_MODE;
+        var response = await HttpClient.PostAsJsonAsync(NavigationManager.BaseUri + "Quiz", result);
+        var newOrderId = await response.Content.ReadFromJsonAsync<int>();
+    }
 
 }
-		

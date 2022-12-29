@@ -8,8 +8,8 @@ namespace PTOEQuiz
 { 
     public class ElementQuestion
     {
-        private string symbol;
-        private string name;
+        private string symbol="";
+        private string name="";
         private string response="";
 
         public string Name { get => name; set => name = value; }

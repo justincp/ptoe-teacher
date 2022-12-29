@@ -17,13 +17,12 @@ namespace PTOEQuiz.Services
 
         public bool QuizFinished { get; set; }
 
-
-        public void ShowQuizDialog()
+        internal void ShowQuizDialog()
         {
             ShowingConfigureDialog = true;
         }
 
-        public async void QuizOver()
+        internal async void QuizOver()
         {
             ShowingConfigureDialog = false;
             

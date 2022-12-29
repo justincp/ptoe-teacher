@@ -25,7 +25,7 @@ namespace PTOEQuiz
                 var db = scope.ServiceProvider.GetRequiredService<QuizContext>();
                 if (db.Database.EnsureCreated())
                 {
-                    SeedData.Initialize(db);
+                    //SeedData.Initialize(db);
                 }
 
             }

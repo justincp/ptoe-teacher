@@ -27,7 +27,7 @@
                 
                 <label>Element name:</label>
                 <MyInputText @ref="@tb" @bind-Value="response" @onkeydown="Enter" />
-                <InputText @ref=itResponse @bind-Value="response" @onkeydown="Enter" hidden="true" />
+                <InputText @ref=itResponse @bind-Value="response" @onkeydown="Enter" hidden />
               
                 @if (freezeInputs && pictureFile != "")
                 {
@@ -68,26 +68,27 @@
 @code {
     public int CORRECT_WAIT_MSEC = 3000;
     public int INCORRECT_WAIT_MSEC = 4000;
+    public string response = "";
 
-    MyInputText tb;
-    private InputText itResponse; // bogus invisible text box to keep form from disappearing
-
-    private bool freezeInputs = false;
-
+    /// <summary>
+    /// The quiz manager
+    /// </summary>
     [Parameter] public ElementQuiz Quiz { get; set; }
-    [Parameter] public ElementQuestion Question { get; set; }
-    [Parameter] public EventCallback OnCancel { get; set; }
-    [Parameter] public EventCallback OnConfirm { get; set; }
-    [Parameter] public EventCallback OnKeyDown { get; set; }
+    /// <summary>
+    ///  Function to be called when the user runs out of time or completes all the questions correctly.
+    /// </summary>
     [Parameter] public EventCallback QuizOver { get; set; }
 
-    PeriodicTimer responseTimer;
-    PeriodicTimer QuizTimer;
+    private MyInputText tb;
+    private InputText itResponse; // bogus invisible text box to keep form from disappearing
 
-    public string response = "";
+    private PeriodicTimer responseTimer;
+    private PeriodicTimer QuizTimer;
+        
     private string soundFile = "";
     private string pictureFile = "";
     private bool isCorrect = false;
+    private bool freezeInputs = false;
     private int counter;
     private int mistakes = 0;
 
@@ -118,7 +119,7 @@
 
         if (e.Code == "Enter" || e.Code == "NumpadEnter")
         {
-            Question.Response = response;
+            //Question.Response = response;
             CheckAnswer();
         }
         await Task.Yield();
@@ -186,8 +187,7 @@
         RunResponseTimer();
     }
 
-
-    async void RunResponseTimer()
+    private async void RunResponseTimer()
     {
         while (await responseTimer.WaitForNextTickAsync())
         {
@@ -198,8 +198,7 @@
                 await QuizOver.InvokeAsync();
                 break;
             }
-            Question = Quiz.Question;
-            Question.Response = "";
+
             response = "";
             freezeInputs = false;
             soundFile = "";
@@ -208,10 +207,11 @@
             //await tb.Element.Value.FocusAsync(); // doesn't work - don't know why
             break;
         }
+
         responseTimer.Dispose();
     }
 
-    async void RunQuizTimer()
+    private async void RunQuizTimer()
     {
         while (await QuizTimer.WaitForNextTickAsync())
         {

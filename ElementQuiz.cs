@@ -1,12 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Net;
-using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
 namespace PTOEQuiz
 {
-    public class ElementQuiz
+    public partial class ElementQuiz
     {
 
         private List<ElementQuestion> allQuestions;
@@ -15,7 +13,14 @@ namespace PTOEQuiz
         private ElementQuestion _question;
 
         private int WORKING_POOL_SIZE = 7;
+        /// <summary>
+        /// How long the quiz should run in seconds.
+        /// </summary>
         public int QUIZ_SECONDS = 60;
+
+        /// <summary>
+        /// If positive mode is true, positive reinforcement will be provided. If false, negative reinforcement will be provided.
+        /// </summary>
         public bool POSITIVE_MODE = false;
         private static readonly string[] CORRECT_POSITIVES = { "Correct, good choice!", "Correct, you're good!", "Correct, that was really smart!","Perfect!","Correct, you're amazing!" };
         private static readonly string[] INCORRECT_POSITIVES = { "Incorrect, keep trying!","Incorrect, you'll get it next time.", "Incorrect, you're getting there.", "Incorrect, you can do it." };
@@ -24,6 +29,9 @@ namespace PTOEQuiz
     
         private string strReinforcement = "";
 
+        /// <summary>
+        /// The current question in the quiz.
+        /// </summary>
         public ElementQuestion Question { get => _question; }
 
         public ElementQuiz()
@@ -34,14 +42,14 @@ namespace PTOEQuiz
             masteredQuestions = new List<ElementQuestion>();
 
             //import elements
-            using (System.IO.StreamReader reader = new System.IO.StreamReader(@"Resources\elements.csv"))
+            using (System.IO.StreamReader reader = new(@"Resources\elements.csv"))
             {
                 string line;
 
                 while ((line = reader.ReadLine()) != null)
                 {
                     //Define pattern
-                    Regex CSVParser = new Regex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))");
+                    Regex CSVParser = MyRegex();
 
                     //Separating columns to array
                     string[] X = CSVParser.Split(line);
@@ -58,7 +66,7 @@ namespace PTOEQuiz
             }
 
             // set the reinforcement mode
-            POSITIVE_MODE = (new Random().Next(0, 2)) > 0;  // Settings1.Default.PositiveMode;
+            POSITIVE_MODE = new Random().Next(0, 2) > 0;  // Settings1.Default.PositiveMode;
             //QUIZ_MINUTES = Settings1.Default.QuizMinutes;
             //WORKING_POOL_SIZE = Settings1.Default.WorkingPoolSize;
 
@@ -70,6 +78,10 @@ namespace PTOEQuiz
 
         }
 
+        /// <summary>
+        /// The number of elements the user has mastered.
+        /// </summary>
+        /// <returns>number of questions answered correctly</returns>
         public int TotalMastered()
         {
             if (masteredQuestions == null)
@@ -82,6 +94,9 @@ namespace PTOEQuiz
             }
         }
 
+        /// <summary>
+        /// Advance to the next question
+        /// </summary>
         public void NextQuestion()
         {
             if (currentQuestions.Count > 0)
@@ -89,7 +104,7 @@ namespace PTOEQuiz
                 // get our next question
                 int randomQuestionIndex = new Random().Next(0, currentQuestions.Count);
                 _question = currentQuestions[randomQuestionIndex];
-                this.strReinforcement = "";
+                strReinforcement = "";
             }
             else
             {
@@ -98,6 +113,11 @@ namespace PTOEQuiz
             }
         }
 
+        /// <summary>
+        /// Check's the user's response against the current question.
+        /// </summary>
+        /// <param name="userResponse">The user's response</param>
+        /// <returns>if the answer is correct</returns>
         public bool CheckAnswer(string userResponse)
         {
             bool correct;
@@ -113,28 +133,32 @@ namespace PTOEQuiz
 
                 if (POSITIVE_MODE)
                 {
-                    strReinforcement = CORRECT_POSITIVES[new Random().Next(0, ElementQuiz.CORRECT_POSITIVES.Length)];
+                    strReinforcement = CORRECT_POSITIVES[new Random().Next(0, CORRECT_POSITIVES.Length)];
                 }
                 else
                 {
-                    strReinforcement = CORRECT_NEGATIVES[new Random().Next(0, ElementQuiz.CORRECT_NEGATIVES.Length)];
+                    strReinforcement = CORRECT_NEGATIVES[new Random().Next(0, CORRECT_NEGATIVES.Length)];
                 }
             }
             else
             {
                 if (POSITIVE_MODE)
                 {
-                    strReinforcement = INCORRECT_POSITIVES[new System.Random().Next(0, ElementQuiz.INCORRECT_POSITIVES.Length)];
+                    strReinforcement = INCORRECT_POSITIVES[new Random().Next(0, INCORRECT_POSITIVES.Length)];
                 }
                 else
                 {
-                    strReinforcement = INCORRECT_NEGATIVES[new Random().Next(0, ElementQuiz.INCORRECT_NEGATIVES.Length)];
+                    strReinforcement = INCORRECT_NEGATIVES[new Random().Next(0, INCORRECT_NEGATIVES.Length)];
                 }
             }
 
             return correct;
         }
 
+        /// <summary>
+        /// Provides negative or positive reinforecment
+        /// </summary>
+        /// <returns>a reinforcement message</returns>
         public string Reinforcment()
         {
             return strReinforcement;
@@ -153,6 +177,8 @@ namespace PTOEQuiz
             }
         }
 
+        [GeneratedRegex(",(?=(?:[^\"]*\"[^\"]*\")*(?![^\"]*\"))")]
+        private static partial Regex MyRegex();
     }
 
 }
