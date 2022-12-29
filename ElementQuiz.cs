@@ -15,7 +15,7 @@ namespace PTOEQuiz
         private ElementQuestion _question;
 
         private int WORKING_POOL_SIZE = 7;
-        public int QUIZ_MINUTES = 1;
+        public int QUIZ_SECONDS = 60;
         public bool POSITIVE_MODE = false;
         private static readonly string[] CORRECT_POSITIVES = { "Correct, good choice!", "Correct, you're good!", "Correct, that was really smart!","Perfect!","Correct, you're amazing!" };
         private static readonly string[] INCORRECT_POSITIVES = { "Incorrect, keep trying!","Incorrect, you'll get it next time.", "Incorrect, you're getting there.", "Incorrect, you can do it." };

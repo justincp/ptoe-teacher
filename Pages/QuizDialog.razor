@@ -16,7 +16,7 @@
             }
             else
             {
-                <h3><font color="red">Mistakes: @mistakes   </font></h3>
+                <h3><font color="red">Mistakes: @mistakes</font></h3>
             }
     
         </div>
@@ -26,8 +26,9 @@
             <div>
                 
                 <label>Element name:</label>
-                <InputText @ref=itResponse @bind-Value="response" @onkeydown="Enter" hidden="true" />
                 <MyInputText @ref="@tb" @bind-Value="response" @onkeydown="Enter" />
+                <InputText @ref=itResponse @bind-Value="response" @onkeydown="Enter" hidden="true" />
+              
                 @if (freezeInputs && pictureFile != "")
                 {
                     <img src="@pictureFile" width="50" height="50" />
@@ -65,6 +66,8 @@
 </div>
 
 @code {
+    public int CORRECT_WAIT_MSEC = 3000;
+    public int INCORRECT_WAIT_MSEC = 4000;
 
     MyInputText tb;
     private InputText itResponse; // bogus invisible text box to keep form from disappearing
@@ -92,7 +95,7 @@
     {
         if (firstRender)
         {
-            counter = Quiz.QUIZ_MINUTES * 60;
+            counter = Quiz.QUIZ_SECONDS;
             QuizTimer = new(TimeSpan.FromSeconds(1));
             RunQuizTimer();
             //await tb.Element.Value.FocusAsync(); // causing an error-don't know why
@@ -148,7 +151,7 @@
                 // nothing special
             }
 
-            responseTimer = new(TimeSpan.FromSeconds(3));
+            responseTimer = new(TimeSpan.FromMilliseconds(CORRECT_WAIT_MSEC));
         }
         else
         {
@@ -177,7 +180,7 @@
 
             }
             mistakes++;
-            responseTimer = new(TimeSpan.FromSeconds(4));
+            responseTimer = new(TimeSpan.FromMilliseconds(INCORRECT_WAIT_MSEC));
         }
 
         RunResponseTimer();
@@ -189,14 +192,20 @@
         while (await responseTimer.WaitForNextTickAsync())
         {
             Quiz.NextQuestion();
+            if (Quiz.Question == null)
+            {
+                // ran out of questions
+                await QuizOver.InvokeAsync();
+                break;
+            }
             Question = Quiz.Question;
             Question.Response = "";
             response = "";
             freezeInputs = false;
             soundFile = "";
             pictureFile = "";
-            StateHasChanged();
-            //await tb.Element.Value.FocusAsync(); // doesn't work - don't know hy
+            await InvokeAsync(StateHasChanged);
+            //await tb.Element.Value.FocusAsync(); // doesn't work - don't know why
             break;
         }
         responseTimer.Dispose();
