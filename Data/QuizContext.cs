@@ -6,8 +6,7 @@ namespace PTOEQuiz.Data
     {
         public QuizContext(
             DbContextOptions options) : base(options)
-        {
-        }
+        { }
 
         public DbSet<QuizResult> QuizResults { get; set; }
 
